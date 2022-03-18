@@ -9,12 +9,12 @@ open class TripService {
     val loggedUser: User? = getLoggedUser()
     if (loggedUser == null) {
       throw UserNotLoggedInException()
-    } else {
-      if (user.isFriendsWith(loggedUser)) {
-        return tripsBy(user)
-      }
-      return emptyList()
     }
+
+    if (user.isFriendsWith(loggedUser)) {
+      return tripsBy(user)
+    }
+    return emptyList()
   }
 
   internal open fun getLoggedUser(): User? {
