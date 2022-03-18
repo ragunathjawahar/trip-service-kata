@@ -10,6 +10,7 @@ class TripServiceShould {
   private var loggedInUser: User? = null
 
   private val guest = null
+  private val jane = User()
   private val joe = User()
 
   private lateinit var tripService: TripService
@@ -22,8 +23,6 @@ class TripServiceShould {
   @Test(expected = UserNotLoggedInException::class)
   fun `validate the logged in user`() {
     // given
-    val jane = User()
-
     loggedInUser = guest
 
     // when
@@ -33,7 +32,6 @@ class TripServiceShould {
   @Test
   fun `not list user's trips for a stranger`() {
     // given
-    val jane = User()
     loggedInUser = joe
 
     // when
@@ -44,7 +42,33 @@ class TripServiceShould {
       .isEmpty()
   }
 
+  @Test
+  fun `list user's trip for a friend`() {
+    // given
+    val newYork = Trip()
+    val sydney = Trip()
+
+    val peter = User()
+    peter.addTrip(newYork)
+    peter.addTrip(sydney)
+
+    peter.addFriend(jane)
+
+    loggedInUser = jane
+
+    // when
+    val trips = tripService.getTripsByUser(peter)
+
+    // then
+    assertThat(trips)
+      .containsExactly(newYork, sydney)
+  }
+
   inner class TestableTripService : TripService() {
+    override fun tripsBy(user: User): List<Trip> {
+      return user.trips
+    }
+
     override fun getLoggedUser(): User? {
       return loggedInUser
     }
