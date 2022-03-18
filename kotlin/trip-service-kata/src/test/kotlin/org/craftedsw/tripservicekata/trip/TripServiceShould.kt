@@ -1,6 +1,8 @@
 package org.craftedsw.tripservicekata.trip
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException
 import org.craftedsw.tripservicekata.user.User
 import org.junit.Before
@@ -14,10 +16,12 @@ class TripServiceShould {
   private val joe = User()
 
   private lateinit var tripService: TripService
+  private lateinit var tripDao: TripDAO
 
   @Before
   fun setup() {
-    tripService = TestableTripService()
+    tripDao = mock()
+    tripService = TestableTripService(tripDao)
   }
 
   @Test(expected = UserNotLoggedInException::class)
@@ -56,6 +60,8 @@ class TripServiceShould {
 
     loggedInUser = jane
 
+    whenever(tripDao.tripsBy(peter)).thenReturn(peter.trips)
+
     // when
     val trips = tripService.getTripsByUser(peter)
 
@@ -64,11 +70,7 @@ class TripServiceShould {
       .containsExactly(newYork, sydney)
   }
 
-  inner class TestableTripService : TripService() {
-    override fun tripsBy(user: User): List<Trip> {
-      return user.trips
-    }
-
+  inner class TestableTripService(tripDao: TripDAO) : TripService(tripDao) {
     override fun getLoggedUser(): User? {
       return loggedInUser
     }

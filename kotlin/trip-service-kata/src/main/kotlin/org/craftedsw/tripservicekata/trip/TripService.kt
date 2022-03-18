@@ -5,14 +5,14 @@ import org.craftedsw.tripservicekata.user.User
 import org.craftedsw.tripservicekata.user.UserSession
 
 open class TripService(
-  private val tripDao: TripDAO = TripDAO(),
+  private val tripDao: TripDAO,
 ) {
   fun getTripsByUser(user: User): List<Trip> {
     val loggedUser: User = getLoggedUser()
       ?: throw UserNotLoggedInException()
 
     return if (user.isFriendsWith(loggedUser)) {
-      tripsBy(user)
+      tripDao.tripsBy(user)
     } else {
       emptyList()
     }
@@ -20,9 +20,5 @@ open class TripService(
 
   internal open fun getLoggedUser(): User? {
     return UserSession.instance.loggedUser
-  }
-
-  internal open fun tripsBy(user: User): List<Trip> {
-    return tripDao.tripsBy(user)
   }
 }
