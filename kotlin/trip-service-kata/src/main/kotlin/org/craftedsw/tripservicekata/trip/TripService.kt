@@ -9,14 +9,7 @@ open class TripService {
     val loggedUser: User? = getLoggedUser()
     if (loggedUser != null) {
       var tripList: List<Trip> = ArrayList()
-      var isFriend = false
-      for (friend in user.friends) {
-        if (friend == loggedUser) {
-          isFriend = true
-          break
-        }
-      }
-      if (isFriend) {
+      if (user.isFriendsWith(loggedUser)) {
         tripList = tripsBy(user)
       }
       return tripList
