@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException
 import org.craftedsw.tripservicekata.user.User
+import org.craftedsw.tripservicekata.user.UserBuilder.Companion.aUser
 import org.junit.Before
 import org.junit.Test
 
@@ -43,11 +44,10 @@ class TripServiceShould {
     val newYork = Trip()
     val sydney = Trip()
 
-    val peter = User()
-    peter.addTrip(newYork)
-    peter.addTrip(sydney)
-
-    peter.addFriend(jane)
+    val peter = aUser()
+      .withTrips(newYork, sydney)
+      .withFriends(jane)
+      .build()
 
     whenever(tripDao.tripsBy(peter)).thenReturn(peter.trips)
 
