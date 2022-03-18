@@ -6,6 +6,7 @@ import org.junit.Test
 
 class TripServiceShould {
   private var loggedInUser: User? = null
+  private val guest = null
 
   @Test(expected = UserNotLoggedInException::class)
   fun `validate the logged in user`() {
@@ -13,7 +14,7 @@ class TripServiceShould {
     val tripService = TestableTripService()
     val jane = User()
 
-    loggedInUser = null
+    loggedInUser = guest
 
     // when
     tripService.getTripsByUser(jane)
