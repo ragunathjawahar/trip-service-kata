@@ -7,14 +7,20 @@ class TripService(
   private val tripDao: TripDAO,
 ) {
   fun getTripsByUser(user: User, loggedUser: User?): List<Trip> {
-    if (loggedUser == null) {
-      throw UserNotLoggedInException()
-    }
+    validateUser(loggedUser)
 
     return if (user.isFriendsWith(loggedUser)) {
       tripDao.tripsBy(user)
     } else {
-      emptyList()
+      noTrips()
     }
   }
+
+  private fun validateUser(loggedUser: User?) {
+    if (loggedUser == null) {
+      throw UserNotLoggedInException()
+    }
+  }
+
+  private fun noTrips(): List<Trip> = emptyList()
 }
