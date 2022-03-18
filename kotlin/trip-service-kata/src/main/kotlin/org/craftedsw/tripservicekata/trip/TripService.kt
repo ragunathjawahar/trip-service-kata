@@ -3,7 +3,7 @@ package org.craftedsw.tripservicekata.trip
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException
 import org.craftedsw.tripservicekata.user.User
 
-open class TripService(
+class TripService(
   private val tripDao: TripDAO,
 ) {
   fun getTripsByUser(user: User, loggedUser: User?): List<Trip> {

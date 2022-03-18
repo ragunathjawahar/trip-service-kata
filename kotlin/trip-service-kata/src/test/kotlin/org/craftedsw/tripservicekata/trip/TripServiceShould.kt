@@ -19,7 +19,7 @@ class TripServiceShould {
   @Before
   fun setup() {
     tripDao = mock()
-    tripService = TestableTripService(tripDao)
+    tripService = TripService(tripDao)
   }
 
   @Test(expected = UserNotLoggedInException::class)
@@ -57,8 +57,5 @@ class TripServiceShould {
     // then
     assertThat(trips)
       .containsExactly(newYork, sydney)
-  }
-
-  inner class TestableTripService(tripDao: TripDAO) : TripService(tripDao) {
   }
 }
