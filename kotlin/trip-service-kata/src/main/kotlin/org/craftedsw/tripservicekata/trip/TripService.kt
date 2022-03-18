@@ -7,13 +7,13 @@ import org.craftedsw.tripservicekata.user.UserSession
 open class TripService {
   fun getTripsByUser(user: User): List<Trip> {
     val loggedUser: User? = getLoggedUser()
-    if (loggedUser != null) {
+    if (loggedUser == null) {
+      throw UserNotLoggedInException()
+    } else {
       if (user.isFriendsWith(loggedUser)) {
         return tripsBy(user)
       }
       return emptyList()
-    } else {
-      throw UserNotLoggedInException()
     }
   }
 
