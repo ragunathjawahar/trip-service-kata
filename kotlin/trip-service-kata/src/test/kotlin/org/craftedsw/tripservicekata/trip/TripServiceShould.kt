@@ -9,8 +9,6 @@ import org.junit.Before
 import org.junit.Test
 
 class TripServiceShould {
-  private var loggedInUser: User? = null
-
   private val guest = null
   private val jane = User()
   private val joe = User()
@@ -26,20 +24,13 @@ class TripServiceShould {
 
   @Test(expected = UserNotLoggedInException::class)
   fun `validate the logged in user`() {
-    // given
-    loggedInUser = guest
-
-    // when
-    tripService.getTripsByUser(jane)
+    tripService.getTripsByUser(jane, guest)
   }
 
   @Test
   fun `not list user's trips for a stranger`() {
-    // given
-    loggedInUser = joe
-
     // when
-    val trips = tripService.getTripsByUser(jane)
+    val trips = tripService.getTripsByUser(jane, joe)
 
     // then
     assertThat(trips)
@@ -58,12 +49,10 @@ class TripServiceShould {
 
     peter.addFriend(jane)
 
-    loggedInUser = jane
-
     whenever(tripDao.tripsBy(peter)).thenReturn(peter.trips)
 
     // when
-    val trips = tripService.getTripsByUser(peter)
+    val trips = tripService.getTripsByUser(peter, jane)
 
     // then
     assertThat(trips)
@@ -71,8 +60,5 @@ class TripServiceShould {
   }
 
   inner class TestableTripService(tripDao: TripDAO) : TripService(tripDao) {
-    override fun getLoggedUser(): User? {
-      return loggedInUser
-    }
   }
 }
