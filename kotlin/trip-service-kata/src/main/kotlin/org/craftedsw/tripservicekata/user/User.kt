@@ -19,7 +19,7 @@ class User {
     return _trips.add(trip)
   }
 
-  fun isFriendsWith(loggedUser: User?): Boolean {
-    return _friends.contains(loggedUser)
+  fun isFriendsWith(user: User?): Boolean {
+    return _friends.contains(user)
   }
 }
